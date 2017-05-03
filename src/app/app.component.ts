@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { Product } from './shared/product.model';
-import { DataService } from './data.service';
-import { CartService } from './cart.service';
-import { AfterViewInit, ViewChild } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Product} from './shared/product.model';
+import {DataService} from './data.service';
+import {CartService} from './cart.service';
+import {ProductService} from './service/product.service';
 
-import { FiltersComponent } from './filters/filters.component';
-import { SearchBarComponent } from './search-bar/search-bar.component';
+
+import {AfterViewInit, ViewChild} from '@angular/core';
+
+import {FiltersComponent} from './filters/filters.component';
+import {SearchBarComponent} from './search-bar/search-bar.component';
 
 
 @Component({
@@ -13,9 +16,9 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
 
- private resourceUrlForProducts = 'http://localhost:8080/api/products'	
+  private resourceUrlForProducts = 'http://localhost:8080/api/products'
 
   products: Product[]
 
@@ -30,38 +33,39 @@ export class AppComponent implements OnInit{
   searchComponent: SearchBarComponent;
 
   sortFilters: any[] = [
-    { name:'Name (A to Z)', value:'name' },
-    { name:'Price (low to high)', value:'priceAsc' },
-    { name:'Price (high to low)', value:'priceDes' }
+    {name: 'Name (A to Z)', value: 'name'},
+    {name: 'Price (low to high)', value: 'priceAsc'},
+    {name: 'Price (high to low)', value: 'priceDes'}
   ]
 
   customFilters: any[] = [
-    { name:'All', value:'all', checked:true },
-    { name:'Available', value:'available', checked:false },
-    { name:'Not Available', value:'unavailable', checked:false },
-    { name:'Bestseller', value:'bestseller', checked:false }
+    {name: 'All', value: 'all', checked: true},
+    {name: 'Available', value: 'available', checked: false},
+    {name: 'Not Available', value: 'unavailable', checked: false},
+    {name: 'Bestseller', value: 'bestseller', checked: false}
   ]
 
   priceFilters: any[] = [
-    { name:'All', value:'all', checked:true },
-    { name:'Price > 30.000', value:'more_30000', checked:false },
-    { name:'Price < 10.000', value:'less_10000', checked:false }
+    {name: 'All', value: 'all', checked: true},
+    {name: 'Price > 30.000', value: 'more_30000', checked: false},
+    {name: 'Price < 10.000', value: 'less_10000', checked: false}
   ]
 
   originalData: any = []
-  
-  integrationData: any = []
 
-  constructor(private dataService: DataService, private cartService: CartService){  }
+  productData: Product[];
 
-  ngOnInit(){
-	  
-	     this.dataService.getRemoteData(this.resourceUrlForProducts).subscribe(
-      (res: any) => {
-        this.integrationData = res;
-        console.log("raspunsul din integrare");
-        console.log(this.integrationData);
-      }
+  constructor(private dataService: DataService, private cartService: CartService, private  productService: ProductService) {
+  }
+
+  ngOnInit() {
+
+    this.productService.getRemoteProductData(this.resourceUrlForProducts).subscribe(
+      (res: Product[]) => {
+        this.productData = res;
+        console.log("Raspuns de la product integration service");
+        console.log(this.productData);
+      },
     );
 
 
@@ -80,7 +84,7 @@ export class AppComponent implements OnInit{
     })
   }
 
-  onURLChange(url){
+  onURLChange(url) {
     this.dataService.getRemoteData(url).subscribe(data => {
       this.originalData = data
       this.mainFilter = {
@@ -100,38 +104,39 @@ export class AppComponent implements OnInit{
   }
 
 
-
-  onSearchChange(search){
+  onSearchChange(search) {
     this.mainFilter.search = search.search
     this.updateProducts({
-      type:'search',
-      change:search.change
+      type: 'search',
+      change: search.change
     })
   }
 
-  onFilterChange(data){
-    if(data.type == 'category'){
-      if(data.isChecked){
+  onFilterChange(data) {
+    if (data.type == 'category') {
+      if (data.isChecked) {
         this.mainFilter.categories.push(data.filter)
-      }else{
-        this.mainFilter.categories = this.mainFilter.categories.filter(category => { return category.categori_id != data.filter.categori_id })
+      } else {
+        this.mainFilter.categories = this.mainFilter.categories.filter(category => {
+          return category.categori_id != data.filter.categori_id
+        })
       }
-    }else if(data.type == 'custom'){
+    } else if (data.type == 'custom') {
       this.mainFilter.customFilter = data.filter
-    }else if(data.type == 'price'){
+    } else if (data.type == 'price') {
       this.mainFilter.priceFilter = data.filter
     }
     this.updateProducts({
-      type:data.type,
+      type: data.type,
       change: data.change
     })
   }
 
-  updateProducts(filter){
+  updateProducts(filter) {
     let productsSource = this.originalData.products
     let prevProducts = this.products
     let filterAllData = true
-    if((filter.type=='search' && filter.change == 1) || (filter.type=='category' && filter.change == -1)){
+    if ((filter.type == 'search' && filter.change == 1) || (filter.type == 'category' && filter.change == -1)) {
       productsSource = this.products
       filterAllData = false
     }
@@ -139,58 +144,58 @@ export class AppComponent implements OnInit{
 
     this.products = productsSource.filter(product => {
       //Filter by search
-      if(filterAllData || filter.type=='search'){
-        if (!product.name.match(new RegExp(this.mainFilter.search, 'i'))){
+      if (filterAllData || filter.type == 'search') {
+        if (!product.name.match(new RegExp(this.mainFilter.search, 'i'))) {
           return false;
         }
       }
 
       //Filter by categories
-      if(filterAllData || filter.type=='category'){
+      if (filterAllData || filter.type == 'category') {
         let passCategoryFilter = false
         product.categories.forEach(product_category => {
-          if(!passCategoryFilter){
+          if (!passCategoryFilter) {
             passCategoryFilter = this.mainFilter.categories.reduce((found, category) => {
-                return found || product_category == category.categori_id
+              return found || product_category == category.categori_id
             }, false)
           }
         })
-        if(!passCategoryFilter){
+        if (!passCategoryFilter) {
           return false
         }
       }
 
       //Filter by custom filters
-      if(filterAllData || filter.type=='custom'){
+      if (filterAllData || filter.type == 'custom') {
         let passCustomFilter = false
         let customFilter = this.mainFilter.customFilter.value
-        if(customFilter == 'all'){
+        if (customFilter == 'all') {
           passCustomFilter = true;
-        }else if(customFilter == 'available' && product.available){
+        } else if (customFilter == 'available' && product.available) {
           passCustomFilter = true;
-        }else if(customFilter == 'unavailable' && !product.available){
+        } else if (customFilter == 'unavailable' && !product.available) {
           passCustomFilter = true;
-        }else if(customFilter == 'bestseller' && product.best_seller){
+        } else if (customFilter == 'bestseller' && product.best_seller) {
           passCustomFilter = true;
         }
-        if(!passCustomFilter){
+        if (!passCustomFilter) {
           return false
         }
       }
 
       //Filter by price filters
-      if(filterAllData || filter.type=='price'){
+      if (filterAllData || filter.type == 'price') {
         let passPriceFilter = false
         let customFilter = this.mainFilter.priceFilter.value
         let productPrice = parseFloat(product.price.replace(/\./g, '').replace(',', '.'))
-        if(customFilter == 'all'){
+        if (customFilter == 'all') {
           passPriceFilter = true;
-        }else if(customFilter == 'more_30000' && productPrice > 30000){
+        } else if (customFilter == 'more_30000' && productPrice > 30000) {
           passPriceFilter = true;
-        }else if(customFilter == 'less_10000' && productPrice < 10000){
+        } else if (customFilter == 'less_10000' && productPrice < 10000) {
           passPriceFilter = true;
         }
-        if(!passPriceFilter){
+        if (!passPriceFilter) {
           return false
         }
       }
@@ -200,32 +205,32 @@ export class AppComponent implements OnInit{
 
     //If the number of products increased after the filter has been applied then sort again
     //If the number of products remained equal, there's a high chance that the items have been reordered.
-    if(prevProducts.length <= this.products.length && this.products.length>1){
+    if (prevProducts.length <= this.products.length && this.products.length > 1) {
       this.sortProducts(this.currentSorting)
     }
 
     //These two types of filters usually add new data to the products showcase so a sort is necessary
-    if(filter.type == 'custom' || filter.type == 'price'){
+    if (filter.type == 'custom' || filter.type == 'price') {
       this.sortProducts(this.currentSorting)
     }
   }
 
-  sortProducts(criteria){
+  sortProducts(criteria) {
     //console.log('sorting ' + this.products.length + ' products')
-    this.products.sort((a,b) => {
+    this.products.sort((a, b) => {
       let priceComparison = parseFloat(a.price.replace(/\./g, '').replace(',', '.')) - parseFloat(b.price.replace(/\./g, '').replace(',', '.'))
-      if(criteria == 'priceDes'){
+      if (criteria == 'priceDes') {
         return -priceComparison
-      }else if(criteria == 'priceAsc'){
-        return  priceComparison
-      }else if(criteria == 'name'){
-        let nameA=a.name.toLowerCase(), nameB=b.name.toLowerCase()
+      } else if (criteria == 'priceAsc') {
+        return priceComparison
+      } else if (criteria == 'name') {
+        let nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase()
         if (nameA < nameB)
           return -1;
         if (nameA > nameB)
           return 1;
         return 0;
-      }else{
+      } else {
         //Keep the same order in case of any unexpected sort criteria
         return -1
       }

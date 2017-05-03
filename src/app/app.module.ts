@@ -16,6 +16,7 @@ import { SortFiltersComponent } from './sort-filters/sort-filters.component';
 
 import { DataService } from './data.service';
 import { CartService } from './cart.service';
+import {ProductService} from './service/product.service';
 import { UrlFormComponent } from './url-form/url-form.component';
 
 @NgModule({
@@ -40,7 +41,8 @@ import { UrlFormComponent } from './url-form/url-form.component';
   ],
   providers: [
     DataService,
-    CartService
+    CartService,
+    ProductService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,10 +1,13 @@
-export class Product{
-  id: number
-  name: string
-  price: string
-  available: boolean
-  best_seller: boolean
-  categories: number[]
-  img: string
-  description: string
+export class Product {
+  constructor(public id?: number,
+              public name?: string,
+              public price?: string,
+              public available?: boolean,
+              public best_seller?: boolean,
+              public categories?: number[],
+              public img?: string,
+              public description?: string) {
+  }
 }
+
+
