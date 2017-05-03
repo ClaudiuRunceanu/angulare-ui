@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Product } from '../shared/product.model';
 import { CartService } from '../cart.service';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'product-thumbnail',
@@ -12,7 +13,7 @@ export class ProductThumbnailComponent implements OnInit {
 
   detailViewActive: boolean
 
-  constructor(private cartService: CartService) {
+  constructor(private cartService: CartService, public _DomSanitizer: DomSanitizer) {
 
   }
 

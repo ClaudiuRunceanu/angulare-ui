@@ -33,8 +33,14 @@ export class ProductService {
       data.id = integration.id;
       data.name = integration.name;
       data.price = "" + integration.price.value;
-      data.available = true;
       data.description = integration.description;
+
+      let firstImage=integration.media.pop();
+      data.imageThumbnail=firstImage.image;
+      data.imageContentType=firstImage.imageContentType;
+
+      data.available = integration.stocks.length > 0;
+
       datas.push(data);
     });
 

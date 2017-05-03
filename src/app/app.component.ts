@@ -53,7 +53,6 @@ export class AppComponent implements OnInit {
 
   originalData: any = []
 
-  productData: Product[];
 
   constructor(private dataService: DataService, private cartService: CartService, private  productService: ProductService) {
   }
@@ -62,9 +61,10 @@ export class AppComponent implements OnInit {
 
     this.productService.getRemoteProductData(this.resourceUrlForProducts).subscribe(
       (res: Product[]) => {
-        this.productData = res;
+
+        this.products = res;
         console.log("Raspuns de la product integration service");
-        console.log(this.productData);
+        console.log(this.products);
       },
     );
 
@@ -79,8 +79,11 @@ export class AppComponent implements OnInit {
       }
 
       //Make a deep copy of the original data to keep it immutable
-      this.products = this.originalData.products.slice(0)
+     //  this.products = this.originalData.products.slice(0)
+      //this.products = this.productData.slice(0)
       this.sortProducts('name')
+      console.log("Mock products: ")
+      console.log(this.products)
     })
   }
 

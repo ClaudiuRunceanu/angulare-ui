@@ -6,6 +6,8 @@ export class Product {
               public best_seller?: boolean,
               public categories?: number[],
               public img?: string,
+              public imageThumbnail?: any,
+              public imageContentType?: string,
               public description?: string) {
   }
 }
