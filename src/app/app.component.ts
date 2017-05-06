@@ -115,7 +115,8 @@ export class AppComponent implements OnInit {
       }
 
       //Make a deep copy of the original data to keep it immutable
-      this.products = this.originalData.products.slice(0)
+      // this.products = this.originalData.products.slice(0)
+      this.products = this.originalProducts
       this.sortProducts('name')
       this.filtersComponent.reset(this.customFilters, this.priceFilters)
       this.searchComponent.reset()
@@ -153,8 +154,8 @@ export class AppComponent implements OnInit {
   }
 
   updateProducts(filter) {
-    let productsSource = this.originalData.products
-    // let productsSource = this.originalProducts
+    // let productsSource = this.originalData.products
+    let productsSource = this.originalProducts
     let prevProducts = this.products
     let filterAllData = true
     if ((filter.type == 'search' && filter.change == 1) || (filter.type == 'category' && filter.change == -1)) {
