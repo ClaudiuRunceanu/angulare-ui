@@ -80,28 +80,34 @@ export class AppComponent implements OnInit {
       (res: Category[]) => {
         this.categories = res;
 
+        this.mainFilter = {
+          search: '',
+          categories: this.categories,
+          customFilter: this.customFilters[0],
+          priceFilter: this.priceFilters[0]
+        }
+
         console.log("Raspuns de la category integration service");
         console.log(this.categories);
       }
     );
 
 
-    this.dataService.getData().then(data => {
-      this.originalData = data
-      this.mainFilter = {
-        search: '',
-        categories: this.originalData.categories.slice(0),
-        customFilter: this.customFilters[0],
-        priceFilter: this.priceFilters[0]
-      }
+    // this.dataService.getData().then(data => {
+    //   this.originalData = data
+    //    this.mainFilter = {
+    //     search: '',
+    //      categories: this.originalData.categories.slice(0),
+    //     customFilter: this.customFilters[0],
+    //     priceFilter: this.priceFilters[0]
+    //   }
+    //
+    //   //Make a deep copy of the original data to keep it immutable
+    //   this.products = this.originalData.products.slice(0)
+    //    this.sortProducts('name')
+    // })
 
-      //Make a deep copy of the original data to keep it immutable
-      //this.products = this.originalData.products.slice(0)
-      //this.products = this.productData.slice(0)
-      // this.sortProducts('name')
-      console.log("Mock products: ")
-      console.log(this.products)
-    })
+
   }
 
   onURLChange(url) {

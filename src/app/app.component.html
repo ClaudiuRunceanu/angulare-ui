@@ -5,7 +5,8 @@
         <div class="filters-wrapper">
           <url-form (onURLChange)='onURLChange($event)'></url-form>
           <cart></cart>
-          <filters #filtersComponent [categories]='originalData.categories' [customFilters]='customFilters' [priceFilters]='priceFilters' (onFilterChange)='onFilterChange($event)'></filters>
+          <!--<filters #filtersComponent [categories]='originalData.categories' [customFilters]='customFilters' [priceFilters]='priceFilters' (onFilterChange)='onFilterChange($event)'></filters>-->
+          <filters #filtersComponent [categories]='categories' [customFilters]='customFilters' [priceFilters]='priceFilters' (onFilterChange)='onFilterChange($event)'></filters>
         </div>
       </div>
       <div class="col-9">
