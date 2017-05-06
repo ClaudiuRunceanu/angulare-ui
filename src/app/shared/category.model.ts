@@ -1,4 +1,6 @@
-export class Category{
-  categori_id: number
-  name: string
+export class Category {
+  constructor(public categori_id?: number,
+              public name?: string) {
+  }
+
 }

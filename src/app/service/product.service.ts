@@ -17,8 +17,8 @@ export class ProductService {
   }
 
 
-  getRemoteProductData(url): Observable<any> {
-    return this.http.get(url)
+  getRemoteProductData(): Observable<any> {
+    return this.http.get(this.resourceUrlForProducts)
       .map(this.extractProduct)
       .catch(this.handleError);
   }
@@ -40,6 +40,12 @@ export class ProductService {
       data.imageContentType=firstImage.imageContentType;
 
       data.available = integration.stocks.length > 0;
+
+      let categoryNumbers: number[]=[];
+      integration.categories.forEach(category =>{
+        categoryNumbers.push(category.id);
+      });
+      data.categories=categoryNumbers;
 
       datas.push(data);
     });

@@ -7,7 +7,7 @@ const enum ClassificationAttributeType {
     'DATE'
 
 };
-import { Category } from './category.model';
+import { CategoryIntegration } from './category.model';
 export class ClassificationClassAttribute {
     constructor(
         public id?: number,
@@ -15,7 +15,7 @@ export class ClassificationClassAttribute {
         public attributeName?: string,
         public value?: string,
         public type?: ClassificationAttributeType,
-        public category?: Category,
+        public category?: CategoryIntegration,
     ) {
     }
 }

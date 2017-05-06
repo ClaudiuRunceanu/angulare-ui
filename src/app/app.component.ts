@@ -3,12 +3,14 @@ import {Product} from './shared/product.model';
 import {DataService} from './data.service';
 import {CartService} from './cart.service';
 import {ProductService} from './service/product.service';
+import {CategoryService} from './service/category.service';
 
 
 import {AfterViewInit, ViewChild} from '@angular/core';
 
 import {FiltersComponent} from './filters/filters.component';
 import {SearchBarComponent} from './search-bar/search-bar.component';
+import {Category} from "./shared/category.model";
 
 
 @Component({
@@ -18,9 +20,8 @@ import {SearchBarComponent} from './search-bar/search-bar.component';
 })
 export class AppComponent implements OnInit {
 
-  private resourceUrlForProducts = 'http://localhost:8080/api/products'
-
   products: Product[]
+
 
   mainFilter: any
 
@@ -53,19 +54,35 @@ export class AppComponent implements OnInit {
 
   originalData: any = []
 
+  originalProducts: Product[] = []
+  categories: Category[] = []
 
-  constructor(private dataService: DataService, private cartService: CartService, private  productService: ProductService) {
+
+  constructor(private dataService: DataService, private cartService: CartService, private  productService: ProductService, private categoryService: CategoryService) {
   }
 
   ngOnInit() {
 
-    this.productService.getRemoteProductData(this.resourceUrlForProducts).subscribe(
+
+    this.productService.getRemoteProductData().subscribe(
       (res: Product[]) => {
 
         this.products = res;
+
+        //Make a copy of original data to keep an original array of products.
+        this.originalProducts = res;
         console.log("Raspuns de la product integration service");
-        console.log(this.products);
+        console.log(res);
       },
+    );
+
+    this.categoryService.getRemoteCategoryData().subscribe(
+      (res: Category[]) => {
+        this.categories = res;
+
+        console.log("Raspuns de la category integration service");
+        console.log(this.categories);
+      }
     );
 
 
@@ -79,9 +96,9 @@ export class AppComponent implements OnInit {
       }
 
       //Make a deep copy of the original data to keep it immutable
-     //  this.products = this.originalData.products.slice(0)
+      //this.products = this.originalData.products.slice(0)
       //this.products = this.productData.slice(0)
-      this.sortProducts('name')
+      // this.sortProducts('name')
       console.log("Mock products: ")
       console.log(this.products)
     })
@@ -137,6 +154,7 @@ export class AppComponent implements OnInit {
 
   updateProducts(filter) {
     let productsSource = this.originalData.products
+    // let productsSource = this.originalProducts
     let prevProducts = this.products
     let filterAllData = true
     if ((filter.type == 'search' && filter.change == 1) || (filter.type == 'category' && filter.change == -1)) {
