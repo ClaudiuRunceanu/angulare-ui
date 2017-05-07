@@ -4,6 +4,7 @@ import {DataService} from './data.service';
 import {CartService} from './cart.service';
 import {ProductService} from './service/product.service';
 import {CategoryService} from './service/category.service';
+import {AuthenticationService} from './service/authentication.service';
 
 
 import {AfterViewInit, ViewChild} from '@angular/core';
@@ -58,11 +59,18 @@ export class AppComponent implements OnInit {
   categories: Category[] = []
 
 
-  constructor(private dataService: DataService, private cartService: CartService, private  productService: ProductService, private categoryService: CategoryService) {
+  constructor(private dataService: DataService, private cartService: CartService, private  productService: ProductService, private categoryService: CategoryService, private authenticationService: AuthenticationService) {
   }
 
   ngOnInit() {
 
+
+    this.authenticationService.login('admin','admin').subscribe(result => {
+      console.log("result of auth");
+      console.log(result);
+
+
+    });
 
     this.productService.getRemoteProductData().subscribe(
       (res: Product[]) => {
