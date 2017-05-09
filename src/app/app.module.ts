@@ -13,6 +13,7 @@ import {ProductThumbnailComponent} from './product-thumbnail/product-thumbnail.c
 import {CartPreviewComponent} from './cart-preview/cart-preview.component';
 import {DataShellComponent} from './data-shell/data-shell.component';
 import {SortFiltersComponent} from './sort-filters/sort-filters.component';
+import {MeniuBarComponent} from './meniu-bar/meniu-bar.component';
 
 import {DataService} from './data.service';
 import {CartService} from './cart.service';
@@ -33,7 +34,8 @@ import {UrlFormComponent} from './url-form/url-form.component';
     CartPreviewComponent,
     DataShellComponent,
     SortFiltersComponent,
-    UrlFormComponent
+    UrlFormComponent,
+    MeniuBarComponent
   ],
   imports: [
     BrowserModule,
