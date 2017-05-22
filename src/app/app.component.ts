@@ -34,6 +34,11 @@ export class AppComponent implements OnInit {
   @ViewChild('searchComponent')
   searchComponent: SearchBarComponent;
 
+  // rootCategory: any[] = [
+  //   {name: 'Brands', id: 1},
+  //   {name: 'Gender', id: 2}
+  // ]
+
   sortFilters: any[] = [
     {name: 'Name (A to Z)', value: 'name'},
     {name: 'Price (low to high)', value: 'priceAsc'},
@@ -57,7 +62,7 @@ export class AppComponent implements OnInit {
 
   originalProducts: Product[] = []
   categories: Category[] = []
-
+  rootCategory: Category[] = []
 
   constructor(private dataService: DataService, private cartService: CartService, private  productService: ProductService, private categoryService: CategoryService, private authenticationService: AuthenticationService) {
   }
@@ -65,7 +70,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
 
 
-    this.authenticationService.login('admin','admin').subscribe(result => {
+    this.authenticationService.login('admin', 'admin').subscribe(result => {
       console.log("result of auth");
       console.log(result);
 
@@ -88,6 +93,12 @@ export class AppComponent implements OnInit {
       (res: Category[]) => {
         this.categories = res;
 
+        this.categories.forEach(category => {
+          if (!category.parent_id) {
+            this.rootCategory.push(category);
+          }
+        });
+
         this.mainFilter = {
           search: '',
           categories: this.categories,
@@ -97,6 +108,7 @@ export class AppComponent implements OnInit {
 
         console.log("Raspuns de la category integration service");
         console.log(this.categories);
+        console.log(this.rootCategory);
       }
     );
 

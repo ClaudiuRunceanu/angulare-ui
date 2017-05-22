@@ -17,6 +17,9 @@ export class FiltersComponent implements OnInit {
   @Input()
   priceFilters: any[]
 
+  @Input()
+  rootCategory: Category[]
+
   @Output()
   onFilterChange = new EventEmitter<any>()
 

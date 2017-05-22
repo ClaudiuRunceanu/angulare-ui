@@ -31,7 +31,9 @@ export class CategoryService {
       let data = new Category();
       data.categori_id = integration.id;
       data.name = integration.name;
-
+      if (integration.parent) {
+        data.parent_id = integration.parent.id;
+      }
       datas.push(data);
     });
 
