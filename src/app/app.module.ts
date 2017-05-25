@@ -20,6 +20,8 @@ import {CartService} from './cart.service';
 import {ProductService} from './service/product.service';
 import {CategoryService} from './service/category.service';
 import {AuthenticationService} from './service/authentication.service';
+import {AccountService} from './service/account.service';
+import {Principal} from './service/principal.service';
 import {UrlFormComponent} from './url-form/url-form.component';
 
 @NgModule({
@@ -48,7 +50,9 @@ import {UrlFormComponent} from './url-form/url-form.component';
     CartService,
     ProductService,
     CategoryService,
-    AuthenticationService
+    AuthenticationService,
+    AccountService,
+    Principal
   ],
   bootstrap: [AppComponent]
 })
