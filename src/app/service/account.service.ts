@@ -7,7 +7,7 @@ export class AccountService  {
     constructor(private http: Http) { }
 
     get(): Observable<any> {
-        return this.http.get('http://localhost:8080/api/account').map((res: Response) => res.json());
+        return this.http.get('http://localhost:8080/api/account',{ withCredentials: true }).map((res: Response) => res.json());
     }
 
     save(account: any): Observable<Response> {
