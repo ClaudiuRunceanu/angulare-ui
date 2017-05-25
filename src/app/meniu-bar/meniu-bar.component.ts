@@ -10,11 +10,18 @@ import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 })
 export class MeniuBarComponent implements OnInit {
 
+  username: string;
+  password: string;
+
   constructor() { }
 
   ngOnInit() {
 
   }
 
+  login () {
+    console.log("username: ", this.username);
+    console.log("password: ", this.password);
+  }
 
 }
