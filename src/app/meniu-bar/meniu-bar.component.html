@@ -88,8 +88,17 @@
       <!--logout start-->
       <ul class="nav navbar-nav navbar-right" *ngIf="isLogged">
 
-        <li><p class="navbar-text">{{account.firstName}} {{account.lastName}}</p></li>
-        <li><a href="#" (click)='logout()'>Logout</a></li>
+        <li>
+            <p class="navbar-text">
+            <span class="glyphicon glyphicon-user"></span>
+          {{account.firstName}} {{account.lastName}}
+            </p>
+        </li>
+        <li>
+          <a href="#" (click)='logout()'>Logout
+          <span class="glyphicon glyphicon-log-out"></span>
+          </a>
+        </li>
 
        </ul>
       <!--logout ent-->
