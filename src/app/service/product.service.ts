@@ -35,11 +35,17 @@ export class ProductService {
       data.price = "" + integration.price.value;
       data.description = integration.description;
 
-      let firstImage=integration.media.pop();
-      data.imageThumbnail=firstImage.image;
-      data.imageContentType=firstImage.imageContentType;
+      if(integration.media) {
+        let firstImage = integration.media.pop();
+        if(firstImage) {
+          data.imageThumbnail = firstImage.image;
+          data.imageContentType = firstImage.imageContentType;
+        }
+      }
 
-      data.available = integration.stocks.length > 0;
+      if(integration.stocks) {
+        data.available = integration.stocks.length > 0;
+      }
 
       let categoryNumbers: number[]=[];
       integration.categories.forEach(category =>{
