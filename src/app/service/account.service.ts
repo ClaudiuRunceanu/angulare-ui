@@ -1,16 +1,25 @@
-import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+import {Injectable} from '@angular/core';
+import {Http, Response, Headers} from '@angular/http';
+import {Observable} from 'rxjs/Rx';
 
 @Injectable()
-export class AccountService  {
-    constructor(private http: Http) { }
+export class AccountService {
+  constructor(private http: Http) {
+  }
 
-    get(): Observable<any> {
-        return this.http.get('http://localhost:8080/api/account',{ withCredentials: true }).map((res: Response) => res.json());
-    }
+  get(): Observable<any> {
+    let headers = new Headers({
+      'Authorization': 'Bearer ' + localStorage.getItem('authenticationToken')
+    });
 
-    save(account: any): Observable<Response> {
-        return this.http.post('http://localhost:8080/api/account', account);
-    }
+    return this.http.get('http://localhost:8080/api/account', {
+      headers: headers
+    }).map((res: Response) => res.json());
+  }
+
+  save(account: any): Observable<Response> {
+    return this.http.post('http://localhost:8080/api/account', account);
+  }
 }
+
+

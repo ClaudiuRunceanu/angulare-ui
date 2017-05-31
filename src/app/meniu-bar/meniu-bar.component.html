@@ -38,7 +38,7 @@
       </form>
 
       <!--login start-->
-      <ul class="nav navbar-nav navbar-right">
+      <ul class="nav navbar-nav navbar-right" *ngIf="!isLogged">
         <li><p class="navbar-text">Already have an account?</p></li>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b>Login</b> <span class="caret"></span></a>
@@ -84,6 +84,15 @@
       </ul>
       <!--login end-->
 
+
+      <!--logout start-->
+      <ul class="nav navbar-nav navbar-right" *ngIf="isLogged">
+
+        <li><p class="navbar-text">{{account.firstName}} {{account.lastName}}</p></li>
+        <li><a href="#" (click)='logout()'>Logout</a></li>
+
+       </ul>
+      <!--logout ent-->
 
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
