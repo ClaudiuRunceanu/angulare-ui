@@ -1,17 +1,15 @@
-import {Component, OnInit} from '@angular/core';
-import {Product} from './shared/product.model';
-import {DataService} from './data.service';
-import {CartService} from './cart.service';
-import {ProductService} from './service/product.service';
-import {CategoryService} from './service/category.service';
-import {AuthenticationService} from './service/authentication.service';
+import {Component, OnInit, ViewChild} from "@angular/core";
+import {Product} from "./shared/product.model";
+import {DataService} from "./data.service";
+import {CartService} from "./cart.service";
+import {ProductService} from "./service/product.service";
+import {CategoryService} from "./service/category.service";
+import {PriceFilterService} from "./service/priceFilter.service";
 
-
-import {AfterViewInit, ViewChild} from '@angular/core';
-
-import {FiltersComponent} from './filters/filters.component';
-import {SearchBarComponent} from './search-bar/search-bar.component';
+import {FiltersComponent} from "./filters/filters.component";
+import {SearchBarComponent} from "./search-bar/search-bar.component";
 import {Category} from "./shared/category.model";
+import {PriceFilter} from "./shared/custom-filter.model";
 
 
 @Component({
@@ -52,30 +50,29 @@ export class AppComponent implements OnInit {
     {name: 'Bestseller', value: 'bestseller', checked: false}
   ]
 
-  priceFilters: any[] = [
-    {name: 'All', value: 'all', checked: true},
-    {name: 'Price > 30.000', value: 'more_30000', checked: false},
-    {name: 'Price < 10.000', value: 'less_10000', checked: false}
-  ]
+  // priceFilters: any[] = [
+  //   {name: 'All', value: 'all', checked: true},
+  //   {name: 'Price > 30.000', value: 'more_30000', checked: false},
+  //   {name: 'Price < 10.000', value: 'less_10000', checked: false}
+  // ]
+
+  priceFilters: PriceFilter[] = []
 
   originalData: any = []
-
   originalProducts: Product[] = []
   categories: Category[] = []
   rootCategory: Category[] = []
 
-  constructor(private dataService: DataService, private cartService: CartService, private  productService: ProductService, private categoryService: CategoryService, private authenticationService: AuthenticationService) {
+  constructor(private dataService: DataService, private cartService: CartService, private  productService: ProductService, private categoryService: CategoryService, private priceFilterService: PriceFilterService) {
   }
 
   ngOnInit() {
-
-
-    this.authenticationService.login('admin', 'admin').subscribe(result => {
-      console.log("result of auth");
-      console.log(result);
-
-
-    });
+    this.mainFilter = {
+      search: '',
+      categories: this.categories,
+      customFilter: this.customFilters[0],
+      priceFilter: this.priceFilters[0]
+    }
 
     this.productService.getRemoteProductData().subscribe(
       (res: Product[]) => {
@@ -99,18 +96,30 @@ export class AppComponent implements OnInit {
           }
         });
 
-        this.mainFilter = {
-          search: '',
-          categories: this.categories,
-          customFilter: this.customFilters[0],
-          priceFilter: this.priceFilters[0]
-        }
+        this.mainFilter.categories = this.categories;
+
+        // this.mainFilter = {
+        //   search: '',
+        //   categories: this.categories,
+        //   customFilter: this.customFilters[0],
+        //   priceFilter: this.priceFilters[0]
+        // }
 
         console.log("Raspuns de la category integration service");
         console.log(this.categories);
         console.log(this.rootCategory);
       }
     );
+
+    this.priceFilterService.getRemotePriceFilterData().subscribe(
+      (res: PriceFilter[]) => {
+
+        this.priceFilters = res;
+        this.mainFilter.priceFilter = this.priceFilters[0];
+
+        console.log("price filter response: ", this.priceFilters);
+      }
+    )
 
 
     // this.dataService.getData().then(data => {
@@ -236,13 +245,45 @@ export class AppComponent implements OnInit {
         let passPriceFilter = false
         let customFilter = this.mainFilter.priceFilter.value
         let productPrice = parseFloat(product.price.replace(/\./g, '').replace(',', '.'))
+        // if (customFilter == 'all') {
+        //   passPriceFilter = true;
+        // } else if (customFilter == 'more_30000' && productPrice > 30000) {
+        //   passPriceFilter = true;
+        // } else if (customFilter == 'less_10000' && productPrice < 10000) {
+        //   passPriceFilter = true;
+        // }
+
         if (customFilter == 'all') {
           passPriceFilter = true;
-        } else if (customFilter == 'more_30000' && productPrice > 30000) {
-          passPriceFilter = true;
-        } else if (customFilter == 'less_10000' && productPrice < 10000) {
-          passPriceFilter = true;
         }
+        else {
+          let priceName = this.mainFilter.priceFilter.name;
+          if (priceName.indexOf(">") >= 0) {
+            if (productPrice > customFilter) {
+              passPriceFilter = true;
+            }
+          }
+          if (priceName.indexOf("<") >= 0) {
+            if (productPrice < customFilter) {
+              passPriceFilter = true;
+            }
+          }
+          if (priceName.indexOf("=") >= 0) {
+            if (productPrice == customFilter) {
+              passPriceFilter = true;
+            }
+          }
+          if (priceName.indexOf("in") >= 0) {
+            let edges=customFilter.split("-");
+            let lowerEdge = edges[0];
+            let upperEdge = edges[1];
+
+            if (productPrice > lowerEdge && productPrice < upperEdge) {
+              passPriceFilter = true;
+            }
+          }
+        }
+
         if (!passPriceFilter) {
           return false
         }
