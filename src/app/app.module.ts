@@ -22,6 +22,7 @@ import {CategoryService} from './service/category.service';
 import {AuthenticationService} from './service/authentication.service';
 import {AccountService} from './service/account.service';
 import {PriceFilterService} from './service/priceFilter.service';
+import {CustomerOrderService} from './service/customer-order.service';
 import {Principal} from './service/principal.service';
 import {UrlFormComponent} from './url-form/url-form.component';
 
@@ -54,7 +55,8 @@ import {UrlFormComponent} from './url-form/url-form.component';
     AuthenticationService,
     AccountService,
     Principal,
-    PriceFilterService
+    PriceFilterService,
+    CustomerOrderService
   ],
   bootstrap: [AppComponent]
 })

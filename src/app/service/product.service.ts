@@ -6,6 +6,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import {ProductIntegration} from "../integration/product.model";
 import {Product} from "../shared/product.model";
+import {Price} from "../shared/price.model";
 
 
 @Injectable()
@@ -32,9 +33,14 @@ export class ProductService {
       let data = new Product();
       data.id = integration.id;
       data.name = integration.name;
-      data.price = "" + integration.price.value;
-      data.description = integration.description;
 
+      let price= new Price();
+      price.value=integration.price.value;
+      price.id=integration.price.id;
+
+      data.price = price;
+
+      data.description = integration.description;
       if(integration.media) {
         let firstImage = integration.media.pop();
         if(firstImage) {

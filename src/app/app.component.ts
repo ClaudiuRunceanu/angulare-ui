@@ -244,7 +244,9 @@ export class AppComponent implements OnInit {
       if (filterAllData || filter.type == 'price') {
         let passPriceFilter = false
         let customFilter = this.mainFilter.priceFilter.value
-        let productPrice = parseFloat(product.price.replace(/\./g, '').replace(',', '.'))
+        // let productPrice = parseFloat(product.price.replace(/\./g, '').replace(',', '.'))
+        let productPrice = product.price.value;
+
         // if (customFilter == 'all') {
         //   passPriceFilter = true;
         // } else if (customFilter == 'more_30000' && productPrice > 30000) {
@@ -307,7 +309,9 @@ export class AppComponent implements OnInit {
   sortProducts(criteria) {
     //console.log('sorting ' + this.products.length + ' products')
     this.products.sort((a, b) => {
-      let priceComparison = parseFloat(a.price.replace(/\./g, '').replace(',', '.')) - parseFloat(b.price.replace(/\./g, '').replace(',', '.'))
+      // let priceComparison = parseFloat(a.price.replace(/\./g, '').replace(',', '.')) - parseFloat(b.price.replace(/\./g, '').replace(',', '.'))
+      let priceComparison = a.price.value - b.price.value;
+
       if (criteria == 'priceDes') {
         return -priceComparison
       } else if (criteria == 'priceAsc') {
