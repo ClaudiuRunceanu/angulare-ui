@@ -4,7 +4,7 @@
     <div class="indicator"><span>{{numProducts}}</span></div>
   </button>
   <div class="fill" [style.height]="expanded ? expandedHeight : inherit" [class.not-shown]='!products.length' [class.animate-plop]='animatePlop' [class.shown]='animatePopout && !expanded'>
-    <div class="expanded-info" [class.shown]='expanded' *ngIf='!isOrderPlace'>
+    <div class="expanded-info" [class.shown]='expanded' *ngIf='!isOrderPlace && !displayLoginMessage'>
       <h3>This is what you're gonna buy...</h3>
       <div class="product" *ngFor="let item of products">
         <div class="row">
@@ -20,9 +20,14 @@
       <button type="button" class="pay-btn" (click) ='placeOrder()'>Pay {{cartTotal | currency:'USD':true:'1.0-0'}}</button>
     </div>
     <div class="expanded-info" [class.shown]='expanded' *ngIf='isOrderPlace'>
-      <h3>Your order was register with your profile details</h3>
+      <h3>Your order was register with your profile details.</h3>
 
       <button type="button" class="pay-btn" (click) ='finalizeOrder()'>Close</button>
+    </div>
+    <div class="expanded-info" [class.shown]='expanded' *ngIf='displayLoginMessage'>
+      <h3>Please login with your account before placing an order!</h3>
+
+      <button type="button" class="pay-btn" (click) ='resetLoginMessage()'>Close</button>
     </div>
     <button type="button" class="close-btn" *ngIf='expanded' (click)="onCartClick()">Close</button>
   </div>

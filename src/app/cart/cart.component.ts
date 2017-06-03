@@ -1,6 +1,7 @@
 import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
 import {CartService} from '../cart.service';
 import {CustomerOrderService} from '../service/customer-order.service';
+import {AuthenticationService} from '../service/authentication.service';
 import {Subscription} from 'rxjs/Subscription';
 import {OrderEntry} from "../shared/order-entry.model";
 import {CustomerOrder, OrderStatus} from "../shared/customer-order.model";
@@ -24,12 +25,13 @@ export class CartComponent implements OnInit {
   expandedHeight: string
   cartTotal: number = 0
   isOrderPlace: boolean = false
+  displayLoginMessage: boolean = false
 
 
   changeDetectorRef: ChangeDetectorRef
 
 
-  constructor(private cartService: CartService, changeDetectorRef: ChangeDetectorRef, private customerOrderService: CustomerOrderService) {
+  constructor(private cartService: CartService, changeDetectorRef: ChangeDetectorRef, private customerOrderService: CustomerOrderService, private authenticationService: AuthenticationService) {
     this.changeDetectorRef = changeDetectorRef
   }
 
@@ -70,6 +72,11 @@ export class CartComponent implements OnInit {
   placeOrder() {
 
     //create entries with products and quantity
+    if(!this.authenticationService.isAuthenticated()){
+      this.displayLoginMessage=true;
+      return;
+    }
+
     let entries: OrderEntry[] = [];
 
     this.products.forEach(data => {
@@ -102,6 +109,11 @@ export class CartComponent implements OnInit {
 
     //  this.onCartClick();
 
+  }
+
+  resetLoginMessage(){
+    this.displayLoginMessage=false;
+    this.expanded = !this.expanded
   }
 
   finalizeOrder(){
