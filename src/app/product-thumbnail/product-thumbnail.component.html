@@ -28,8 +28,10 @@
     <div class="detail-view" [class.active]='detailViewActive'>
       <div class="bg" [class.shown]='detailViewActive'></div>
       <div class="info-wrapper">
+        <br/>
+        <br/>
         <p class="d-holder d-title">{{product.name}}</p>
-        <p class="d-holder d-price">$ {{product.price}}</p>
+        <p class="d-holder d-price">$ {{product.price.value}}</p>
         <p class="d-holder d-description">{{product.description}}</p>
       </div>
       <button type="button" class="hide-detail-btn" (click)='onProductClick()'>Click to hide</button>
