@@ -65,31 +65,32 @@ export class AuthenticationService {
     }
 
 
-    simpleLogin(username: string, password: string): Observable<boolean> {
-
-      let data = {
-        username: username,
-        password: password,
-        rememberMe: false
-      };
-
-      return this.http.post('http://localhost:8080/api/authenticate', data).map(handleResponse.bind(this));
-
-      function handleResponse (resp) {
-
-
-        console.log("response from authentification");
-        console.log(resp);
-
-        let token = resp.json().id_token;
-        if (token) {
-          localStorage.setItem('authenticationToken', token);
-          return true;
-        }
-        return false;
-      }
-
-    }
+    // simpleLogin(username: string, password: string): Observable<boolean> {
+    //
+    //   let data = {
+    //     username: username,
+    //     password: password,
+    //     rememberMe: false
+    //   };
+    //
+    //   return this.http.post('http://localhost:8080/api/authenticate', data).map(handleResponse.bind(this));
+    //
+    //   function handleResponse (resp) {
+    //
+    //
+    //     console.log("response from authentification");
+    //     console.log(resp);
+    //
+    //     let token = resp.json().id_token;
+    //     if (token) {
+    //       localStorage.setItem('authenticationToken', token);
+    //        return true;
+    //
+    //     }
+    //     return false;
+    //   }
+    //
+    // }
 
     isAuthenticated(): boolean{
       if(localStorage.getItem('authenticationToken')){
@@ -107,30 +108,38 @@ export class AuthenticationService {
       rememberMe: false
     };
 
-
-    console.log("in login authentification service");
     return this.http.post('http://localhost:8080/api/authenticate', data)
       .map((response: Response) => {
 
         console.log("response from authentification");
         console.log(response);
-        // login successful if there's a jwt token in the response
 
 
-        let bearerToken = response.headers.get('Authorization');
-        if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
-          let jwt = bearerToken.slice(7, bearerToken.length);
-          localStorage.setItem('authenticationToken', jwt);
+        let token = response.json().id_token;
+        if (token) {
+          localStorage.setItem('authenticationToken', token);
+          // return true;
+          return true;
         }
 
 
-        this.principal.identity(true).then(account => {
-          // After the login the language will be changed to
-          // the language selected by the user during his registration
+        // login successful if there's a jwt token in the response
 
-          console.log("account: ",account);
 
-        });
+        // let bearerToken = response.headers.get('Authorization');
+        // if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
+        //   let jwt = bearerToken.slice(7, bearerToken.length);
+        //   localStorage.setItem('authenticationToken', jwt);
+        // }
+        //
+        //
+        // this.principal.identity(true).then(account => {
+        //   // After the login the language will be changed to
+        //   // the language selected by the user during his registration
+        //
+        //   console.log("account: ",account);
+        //
+        // });
 
 
         // let token = response.json() && response.json().token;
@@ -148,7 +157,7 @@ export class AuthenticationService {
         //     return false;
         // }
 
-        return true;
+        return false;
       });
   }
 

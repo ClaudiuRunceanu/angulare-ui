@@ -30,7 +30,7 @@ export class ProductService {
     let datas: Product[] = [];
 
     this.integrationProducts.forEach(integration => {
-      if ('ONLINE' == integration.catalog.version.toString()) {
+      if (true == integration.catalog.isDefault) {
         let data = new Product();
         data.id = integration.id;
         data.name = integration.name;

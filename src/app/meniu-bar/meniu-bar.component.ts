@@ -36,7 +36,8 @@ export class MeniuBarComponent implements OnInit {
   }
 
   login() {
-    this.authenticationService.simpleLogin(this.username, this.password).subscribe(result => {
+    // this.authenticationService.simpleLogin(this.username, this.password).subscribe(result => {
+    this.authenticationService.login(this.username, this.password).subscribe(result => {
       if(result){
         this.accountService.get().toPromise().then(account => {
           this.account = new Account(account);
