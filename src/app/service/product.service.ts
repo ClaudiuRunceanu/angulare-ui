@@ -27,42 +27,44 @@ export class ProductService {
 
   private extractProduct(res: Response) {
     this.integrationProducts = res.json();
-    let datas: Product[] =[];
+    let datas: Product[] = [];
 
     this.integrationProducts.forEach(integration => {
-      let data = new Product();
-      data.id = integration.id;
-      data.name = integration.name;
+      if ('ONLINE' == integration.catalog.version.toString()) {
+        let data = new Product();
+        data.id = integration.id;
+        data.name = integration.name;
 
-      let price= new Price();
-      price.value=integration.price.value;
-      price.id=integration.price.id;
+        let price = new Price();
+        price.value = integration.price.value;
+        price.id = integration.price.id;
 
-      data.price = price;
+        data.price = price;
 
-      data.description = integration.description;
-      if(integration.media) {
-        let firstImage = integration.media.pop();
-        if(firstImage) {
-          data.imageThumbnail = firstImage.image;
-          data.imageContentType = firstImage.imageContentType;
+        data.description = integration.description;
+        if (integration.media) {
+          let firstImage = integration.media.pop();
+          if (firstImage) {
+            data.imageThumbnail = firstImage.image;
+            data.imageContentType = firstImage.imageContentType;
+          }
         }
+
+        if (integration.stocks) {
+          data.available = integration.stocks.length > 0;
+        }
+
+        let categoryNumbers: number[] = [];
+        integration.categories.forEach(category => {
+          categoryNumbers.push(category.id);
+        });
+        data.categories = categoryNumbers;
+
+        datas.push(data);
       }
-
-      if(integration.stocks) {
-        data.available = integration.stocks.length > 0;
-      }
-
-      let categoryNumbers: number[]=[];
-      integration.categories.forEach(category =>{
-        categoryNumbers.push(category.id);
-      });
-      data.categories=categoryNumbers;
-
-      datas.push(data);
     });
 
-    return datas|| {};
+    return datas || {};
   }
 
   private handleError(error: any) {
